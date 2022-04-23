@@ -1,0 +1,26 @@
+/* 1.Create a query that lists each movie, the film category its classified in and the number 
+of times it has been rented out in descending order*/
+
+SELECT f.title, c.name, count(r.rental_id) as Rent_Count
+FROM rental r
+	JOIN inventory i 
+		on r.inventory_id  = i.inventory_id
+	JOIN film f
+		on i.film_id = f.film_id
+	JOIN film_category fc
+		on f.film_id = fc.film_id
+	JOIN category c
+		on fc.category_id = c.category_id
+GROUP BY 1,2
+ORDER BY 3 DESC;
+
+SELECT first_name, last_name 
+FROM customer
+WHERE Customer_id in (SELECT customer_id
+			FROM payment 
+			GROUP BY Customer_id
+			HAVING SUM(amount) =( SELECT SUM(amount)
+					 	FROM payment
+						GROUP  BY customer_id
+						ORDER BY 1 DESC
+						LIMIT 1));
