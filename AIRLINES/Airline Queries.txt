@@ -149,9 +149,9 @@ hour on 2017-08-02 */
 
 /* 18. Using Exists function in the subqueries return the ticket_no, boarding_no and seat_no who used the 
 Business class */
-select ticket_no, boarding_no, seat_no
-from boarding_passes
-where Exists (Select flight_id from ticket_flights where fare_conditions = 'Business')
+	SELECT ticket_no, boarding_no, seat_no
+	FROM boarding_passes
+	WHERE EXISTS (Select flight_id from ticket_flights where fare_conditions = 'Business')
 
 --19. Write a query to return the number of flights where aircraft is greater than 7000
 With long_range as (select * from aircrafts where range > 7000)
@@ -161,13 +161,49 @@ join long_range l on f.aircraft_code = l.aircraft_code
 
 
 --20. Get the passenger_name departure_time, arrival_airport and departure_airport with book_ref A55664--
-With booking_number as (select passenger_name,  ticket_no from tickets where book_ref = 'A55664')
-select b.passenger_name, f.actual_departure, f.arrival_airport, f.departure_airport
-from flights f
-join ticket_flights tf
-on f.flight_id = tf.flight_id
-join booking_number b
-on tf.ticket_no = b.ticket_no
+	With booking_number as (select passenger_name,  ticket_no from tickets where book_ref = 'A55664')
+	select b.passenger_name, f.actual_departure, f.arrival_airport, f.departure_airport
+	from flights f
+	join ticket_flights tf
+	on f.flight_id = tf.flight_id
+	join booking_number b
+	on tf.ticket_no = b.ticket_no
+
+-- 21.  What are the minimun and maximum ticket prices in all directions? --
+	with t1 as (Select flight_id,
+					(Select city ->> 'en' from airports where airport_code = f.departure_airport) as departure_city,
+					(Select city ->> 'en' from airports where airport_code = f.arrival_airport) as arrival_city
+					from flights f
+		   			group by 1,2,3)
+	select t1.departure_City, t1.arrival_city, min(tf.amount), max(tf.amount)
+	from ticket_flights tf
+	join t1
+	on tf.flight_id = t1.flight_id
+	group by 1,2
+	order by 1,2
+
+/* 22 calculate teh capacity for every flight, date, arrival_city, departure_city number of passengers and total_number 
+of seats in every flight */
+
+
+With t1 as (select f.flight_id, f.flight_no, f.scheduled_departure,
+				(Select city ->> 'en' from airports where airport_code = f.departure_airport) as departure_city,
+				(Select city ->> 'en' from airports where airport_code = f.arrival_airport) as arrival_city,
+				f.aircraft_code, count(tf.ticket_no) as No_of_Passengers,
+				(Select count(s.seat_no) from seats s where s.aircraft_code = f.aircraft_code) as total_seat
+			From flights f
+			join ticket_flights tf
+			on f.flight_id = tf.flight_id
+			where f.status = 'Arrived'
+			Group by 1,2,3,4,5,6)
+Select t1.flight_id, t1.flight_no, t1.scheduled_departure, t1.departure_city,
+		t1.arrival_city, a.model ->> 'en' as Model, t1.total_seat,
+		round(t1.No_of_Passengers :: numeric / t1.total_seat :: numeric, 2) as Passengers
+from t1
+join aircrafts as a
+on t1.aircraft_code = a.aircraft_code
+Order by t1.scheduled_departure
+
 
 
 
