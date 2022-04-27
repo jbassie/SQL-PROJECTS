@@ -204,6 +204,24 @@ join aircrafts as a
 on t1.aircraft_code = a.aircraft_code
 Order by t1.scheduled_departure
 
+--23. calculate the ratio of the number of tickets to the total amount of sales for each day--
+Select date_trunc('day', book_date), count(t.ticket_no)/sum(total_amount) as sales_ratio
+from bookings b
+join tickets t
+on b.book_ref = t.book_ref
+group by 1
+order by 2
+
+
+--24. calculate the ratio of the number of tickets to the price of tickets for each day--
+Select date_trunc('day', book_date), count(t.ticket_no)/sum(amount) as sales_ratio
+from bookings b
+join tickets t
+on b.book_ref = t.book_ref
+join ticket_flights tf
+using(ticket_no)
+group by 1
+order by 2
 
 
 
