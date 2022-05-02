@@ -1,18 +1,20 @@
-# AIRLINES DATABASE 
+# PROJECT OVEVIEW
+ DVD RENTAL DATABASE
+ DVD RENTALS Database showcases a popular rental store and its rental transactions over a periods. It represents a Simple Rental Store and it could be used showcase solutions to business problems using SQL
 
 ## TABLES
-### 1. Actor
-### 2. Address
-### 3. Category
-### 4. City
-### 5. Country
-### 6. Customer
-### 7. Flim
-### 8. Film_actor
-### 9. Film_category
-### 10. Inventory
-### 11. Language
-### 12. Payment
-### 13. Rental
-### 14. Staff
-### 15. Store
+- Actor
+- Address
+- Category
+- City
+- Country
+- Customer
+- Flim
+- Film_actor
+- Film_category
+- Inventory
+- Language
+- Payment
+- Rental
+- Staff
+- Store

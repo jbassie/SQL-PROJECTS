@@ -1,14 +1,19 @@
-# AIRLINES DATABASE 
+#  PROJECT OVERVIEW
+AIRLINES DATABASE
+Airline Database Contains data about a flight across Russian airspace within a particular period of time. 
+This database displays various activities and business scenario carried out in a typical AIRSPACE MARKET.
+This queries from this database indicates how to solve and extract information from the database
+
 
 ## TABLES
-#### 1. Aircrafts
-####  2. Airports
-####  3. Boarding_Passes
-####  4. Bookings
-####  5. Flights
-####  6. Pilots
-####  7. Seats
-####  8. ticket_flights
-####  9. tickets
+-  Aircrafts
+- Airports
+- Boarding_Passes
+- Bookings
+- Flights
+- Pilots
+- Seats
+- ticket_flights
+- tickets
 
 
