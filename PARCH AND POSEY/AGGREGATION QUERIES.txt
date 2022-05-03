@@ -1,0 +1,129 @@
+-- 1. Find the total amount of poster_qty paper ordered in the orders table --
+
+	SELECT SUM(poster_qty)
+	FROM orders
+
+-- 2.Find the total amount of standard_qty paper ordered in the orders table --
+
+	SELECT SUM(standard_qty)
+	FROM orders
+
+
+-- 3.Find the total dollar amount of sales using the total_amt_usd in the orders table --
+
+	SELECT SUM(total_amt_usd)
+	FROM orders
+
+/*4. Find the total amount spent on standard_amt_usd and gloss_amt_usd paper for each order in the orders table. 
+This should give a dollar amount for each order in the table */
+
+	Select SUM(standard_amt_usd) as total_standard, SUM(gloss_amt_usd) as total_gloss
+	FROM orders
+
+/* 5. Find the standard_amt_usd per unit of standard_qty paper. Your solution should use both an 
+aggregation and a mathematical operator.*/
+
+	SELECT SUM(standard_amt_usd)/SUM(standard_qty) as standard_price_per_unit
+	FROM ORDERS
+
+--6. When was the earliest order ever placed? You only need to return the date --
+
+	SELECT min(occurred_at :: date) AS date
+	FROM orders
+
+
+-- 7. Try performing the same query as in question 1 without using an aggregation function.--
+
+	SELECT occurred_at :: date
+	FROM orders
+	ORDER BY 1 asc
+	LIMIT 1
+
+-- 8. When did the most recent (latest) web_event occur? --
+ 	SELECT Max(occurred_at)
+	FROM orders
+
+--9. Try to perform the result of the previous query without using an aggregation function. --
+	SELECT occurred_at
+	FROM orders
+	ORDER BY 1 desc
+	LIMIT 1
+
+
+ /* 10. Find the mean (AVERAGE) amount spent per order on each paper type, as well as the mean amount of 
+each paper type purchased per order. Your final answer should have 6 values - one for each paper type for the
+average number of sales, as well as the average amount */
+
+	SELECT AVG(standard_qty) as Avg_standard, AVG(standard_amt_usd) as avg_standard_amt,
+			AVG(poster_qty) as Avg_poster, AVG(poster_amt_usd) as avg_poster_amt,
+			AVG(gloss_qty) as Avg_gloss, AVG(gloss_amt_usd) as avg_gloss_amt
+	FROM orders
+
+-- 11. what is the MEDIAN total_usd spent on all orders --
+
+	SELECT COUNT(total_amt_usd)/2
+	FROM orders
+	-- This gives us the median count, the find the median value
+	SELECT *
+	FROM (SELECT total_amt_usd
+		 FROM orders
+		 ORDER BY 1 
+		 LIMIT 3457) as table_1
+	ORDER BY total_amt_usd desc
+	LIMIT 2
+
+/* 12. For each account, determine the average amount of each type of paper they purchased across their orders.
+Your result should have four columns - one for the account name and one for the average quantity purchased 
+for each of the paper types for each account */
+	SELECT  a.name as Account_name, AVG(standard_qty) as Avg_standard_amt,
+			AVG(poster_qty) as Avg_poster_qty, AVG(gloss_qty) as avg_gloss_amt
+	FROM orders o
+		JOIN accounts a
+		ON o.account_id = a.id
+	GROUP BY 1
+	
+/* 13. For each account, determine the average amount of each type of paper they purchased across their orders.
+Your result should have four columns - one for the account name and one for the average quantity purchased for 
+each of the paper types for each account */
+	SELECT  a.name as Account_name, AVG(standard_amt_usd) as Avg_standard_amt,
+			AVG(poster_amt_usd) as Avg_poster_qty, AVG(gloss_amt_usd) as avg_gloss_amt
+	FROM orders o
+		JOIN accounts a
+		ON o.account_id = a.id
+	GROUP BY 1
+
+/* 14. Which account(by name) placed the earliest order? Your solution should have the account name and the 
+date of the order */
+
+	SELECT a.name, o.occurred_at
+	FROM accounts a
+		JOIN orders o
+		ON a.id = o.account_id
+	ORDER BY 2
+	LIMIT 1
+/* 15. Find the total sales in usd for each account. You should include two columns- the total_sales
+	for each company's order in usd and the company name */
+	
+	SELECT a.name, SUM(o.total_amt_usd) as total_amount
+	FROM accounts a
+		JOIN orders o
+		ON a.id = o.account_id
+	GROUP BY 1
+
+/* 16. Via what channel did the most recent(latest) web_event occur, which account was associated with this 
+		event? Your query should return only three values- the date, channel, and account name*/
+		
+	SELECT a.name, w.channel, w.occurred_at
+	FROM web_events w
+		JOIN accounts a
+		ON w.account_id = a.id
+	ORDER BY 2 desc
+	LIMIT 1
+
+/* 17. Find th total number of times each type of channnel from web_events was used . Your final table should have 
+two columns - the channel and the number of times the channel was used */
+	SELECT channel, count(channel)
+	FROM web_events
+	GROUP BY 1
+	
+	
