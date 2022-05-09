@@ -6,14 +6,14 @@ This queries from this database indicates how to solve and extract information f
 
 
 ## TABLES
--  Aircrafts
+- Aircrafts
 - Airports
 - Boarding_Passes
 - Bookings
 - Flights
 - Pilots
 - Seats
-- ticket_flights
-- tickets
+- Ticket_flights
+- Tickets
 
 
