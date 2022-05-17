@@ -1,0 +1,73 @@
+--1. Find the average number of events a day for each channel.--
+SELECT channel, AVG(events)
+FROM (Select Date_part('day', occurred_at) as day, Channel, count(*) as events
+		FROM web_events
+		GROUP BY 1,2
+		ORDER BY 1 asc) as t1`
+GROUP BY 1
+
+--2. Use DATE_TRUNC to pull month level information about the first order ever placed in the orders table--
+Select DATE_TRUNC('Month', min(occurred_at))
+FROM orders
+ 
+/* 3. Use the result of the previous query to find the orders that took place in the same month and year as the 
+first order and the pull the average of each type of paper qty in this month */
+SELECT AVG(standard_qty) as avg_std, AVG(poster_qty) as avg_pos, AVG(gloss_qty) as avg_glos
+FROM Orders
+Where DATE_TRUNC('Month', occurred_at) = 
+	(SELECT DATE_TRUNC('Month', min(occurred_at))
+	FROM orders)
+
+/* 4. Provide the name of the sales_rep in each region with the largest amount of total_amt_usd sales */
+
+SELECT t2.region,t3.sales_rep,t3.total_sales
+FROM
+	(SELECT region, max(total_Sales) as total_sales
+	FROM
+		(SELECT r.name as region, sr.name as sales_rep,  sum(total_amt_usd) as total_sales
+		from region r
+		join sales_reps sr
+		on r.id = sr.region_id
+		join accounts a
+		on sr.id = a.sales_rep_id
+		join orders o
+		on a.id = o.account_id
+		GROUP BY 1,2
+		ORDER BY 3 DESC) as t1
+	GROUP BY 1) t2
+JOIN 
+	(SELECT r.name as region, sr.name as sales_rep,  sum(total_amt_usd) as total_sales
+	FROM region r
+		JOIN sales_reps sr
+		ON r.id = sr.region_id
+		JOIN accounts a
+		ON sr.id = a.sales_rep_id
+		JOIN orders o
+		ON a.id = o.account_id
+	GROUP BY 1,2
+	ORDER BY 3 DESC) as t3
+on t2.region = t3.region and t2.total_sales = t3.total_sales
+
+-- 5.For the region with the largest sales total_amt_usd, how many total orders were placed --
+SELECT r.name, Count(total_amt_usd)
+FROM region r
+		JOIN sales_reps sr
+		ON r.id = sr.region_id
+		JOIN accounts a
+		ON sr.id = a.sales_rep_id
+		JOIN orders o
+		ON a.id = o.account_id
+GROUP BY 1
+HAVING sum(total_amt_usd)= (SELECT MAX(total)
+		FROM(SELECT r.name, sum(total_amt_usd) as total
+			FROM region r
+				JOIN sales_reps sr
+				ON r.id = sr.region_id
+				JOIN accounts a
+				ON sr.id = a.sales_rep_id
+				JOIN orders o
+				ON a.id = o.account_id
+			GROUP BY 1) t1)
+
+
+
