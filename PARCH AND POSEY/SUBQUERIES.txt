@@ -69,5 +69,77 @@ HAVING sum(total_amt_usd)= (SELECT MAX(total)
 				ON a.id = o.account_id
 			GROUP BY 1) t1)
 
+/* 6 How many accounts had more total purchases than the account name which has bought the most standard_qty paper 
+throughout their lifetime as a customer? */
+SELECT Count(*)
+FROM(
+	SELECT a.name, sum(o.total)
+	FROM orders o
+	JOIN accounts a
+	On o.account_id = a.id
+	GROUP BY 1
+	HAVING sum(o.total) > (SELECT max(total)
+							FROM(SELECT a.name, sum(o.standard_qty) as total
+								 FROM orders o
+									JOIN accounts a
+									On o.account_id = a.id
+									GROUP BY 1) as t1 ) ) as t2
+
+/* 7 For the customer that spent the most (in total over their lifetime as a customer) 
+total_amt_usd, how many web_events did they have for each channel? */
+Select account_id, channel, count(*)
+FROM web_events
+WHERE account_id = (SELECT t1.id
+					FROM (
+							SELECT a.id, a.name as name, sum(o.total_amt_usd) as total
+							FROM orders o
+							JOIN accounts a
+							On o.account_id = a.id
+							GROUP BY 1
+							ORDER BY 2 DESC
+							LIMIT 1 ) as t1)
+GROUP BY 1,2
+
+
+/* 8. What is the lifetime average amount spent in terms of total_amt_usd for the top 10 total spending accounts */
+Select avg(total)
+FROM (
+Select a.name, sum(o.total_amt_usd) as total
+FROM orders o
+JOIN accounts a
+On o.account_id = a.id
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10 ) t1
+
+/* 9. What is the lifetime average amount spent in terms of total_amt_usd, including only the companies that spent 
+more per order, on average, than the average of all orders.*/
+SELECT avg(t1.total_amt)
+FROM(SELECT a.name,  avg(total) as total, sum(total_amt_usd) as total_amt
+		FROM orders o
+		JOIN accounts a
+		On o.account_id = a.id
+		GROUP BY 1
+		Having avg(total) > (Select avg(total) 
+						from orders)) as t1
+
+
+-- 10. You need to find the average number of events for each channel per day. --
+	SELECT Channel,AVG(cnt)
+	FROM(SELECT channel, Date_trunc('day', occurred_at) as day, count(*) as cnt
+			FROM web_events
+			GROUP BY 1,2) as t1
+	GROUP BY 1
+
+
+
+
+
+
+
+					
+
+
+
 
 
