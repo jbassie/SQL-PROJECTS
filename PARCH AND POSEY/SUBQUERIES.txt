@@ -197,6 +197,18 @@ ORDER BY 2 DESC)
 SELECT count(*)
 FROM t2
 
+/* 14. What is the lifetime average amount spent in terms of total_amt_usd, including only the companies 
+that spent more per order, on average, than the average of all orders */
+
+with t1 as (Select a.name, avg(total_amt_usd) as avg_total
+		   FROM orders o
+		   JOIN accounts a
+		   ON o.account_id = a.id
+			GROUP BY 1
+			HAVING avg(total_amt_usd) > (SELECT avg(total_amt_usd)
+								FROM orders))
+Select avg(avg_total)
+FROM t1
 
 
 
