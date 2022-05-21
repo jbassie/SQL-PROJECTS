@@ -11,5 +11,10 @@ the data in the Database
 - web_events
 
 
+## ERD
+Check out the erd image [here](https://github.com/jbassie/SQL-PROJECTS/blob/main/_images/parch%20and%20posey.png)
+
+
+
 
 

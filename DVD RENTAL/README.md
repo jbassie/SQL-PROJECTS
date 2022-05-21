@@ -18,3 +18,6 @@
 - Rental
 - Staff
 - Store
+
+## ERD 
+Check out the ERD (here)[https://github.com/jbassie/SQL-PROJECTS/blob/main/_images/dvd_rental.png]
