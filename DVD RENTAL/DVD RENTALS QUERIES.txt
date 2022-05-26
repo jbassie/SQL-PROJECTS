@@ -40,5 +40,42 @@ where f.rating = 'PG'
 Group by 1
 Order by 2 desc
 
+-- 4. what are the top and least rented (in-demand) genres and thier total sales
+with t1 as (Select c.name as name ,count(r.rental_id) as orders, sum(p.amount) as total_amount
+			FROM category c
+			JOIn film_category
+			USING(category_id)
+			JOIN film f
+			USING(film_id)
+			JOIN inventory i
+			USING(film_id)
+			JOIN rental r
+			USING(inventory_id)
+			JOIN payment p
+			USING(rental_id)
+			GROUP BY 1
+			ORDER BY 2 DESC
+			
+)
+Select * from t1
 
+
+-- 5. can we know how many distict users have rented each genre --
+with t1 as (Select c.name, count(distinct cu.customer_id) as customers,count(r.rental_id) as orders
+			FROM category c
+			JOIn film_category
+			USING(category_id)
+			JOIN film f
+			USING(film_id)
+			JOIN inventory i
+			USING(film_id)
+			JOIN rental r
+			USING(inventory_id)
+			JOIN customer cu
+			USING(customer_id)
+			GROUP BY 1
+			ORDER BY 3 DESC
+			
+)
+Select * from t1
 
