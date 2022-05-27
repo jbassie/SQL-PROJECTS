@@ -79,3 +79,32 @@ with t1 as (Select c.name, count(distinct cu.customer_id) as customers,count(r.r
 )
 Select * from t1
 
+--6. For all the movies rated "PG" show the movies and show the movies and the number of times it got rented --
+
+SELECT f.title,count(r.rental_id) as rented_count
+FROM film f
+JOIN inventory i
+USING(film_id)
+JOIN rental r
+USING (inventory_id)
+where f.rating= 'PG'
+GROUP BY 1
+
+--7 How many rented films were returned late, early and on time?
+with t1 as ( Select inventory_id,date_part('day', return_date - rental_date ) as date_diff
+		   FROM rental),
+	t2 as (Select rental_duration, date_diff,
+		  	CASE WHEN (rental_duration < date_diff) then 'RETURNED EARLY'
+		   WHEN (rental_duration = date_diff) then 'RETURNED ON TIME'
+		   ELSE 'RETURNED LATE' END AS RETURN_TIME
+		   FROM film f
+		   JOIN inventory i
+		   USING(film_id)
+			JOIN t1
+			USING (inventory_id)
+		  )
+SELECT RETURN_TIME, COUNT(*)
+FROM t2
+GROUP BY 1
+		   
+
