@@ -16,4 +16,4 @@ This queries from this database indicates how to solve and extract information f
 - Ticket_flights
 - Tickets
 
-
+## SCHEMA

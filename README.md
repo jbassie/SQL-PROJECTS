@@ -17,3 +17,7 @@ DVD RENTALS Database showcases a popular rental store and its rental transaction
 ## 3. PARCH and PORSEY DATABASE
 
 This Projects is carried out on fictional Database (Parch and Posey) a Business Company which deals with Paper Production. This Repo contains the queries to solve simple and advanced business problems from the data in the Database
+
+
+> All queries are written using PostgreSql syntax
+
