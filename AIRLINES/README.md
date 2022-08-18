@@ -18,4 +18,4 @@ This queries from this database indicates how to solve and extract information f
 
 ## SCHEMA
 Here is the ERD 
-https://github.com/jbassie/SQL-PROJECTS/blob/main/_images/ERD%20Diagram.png
+![ERD](https://github.com/jbassie/SQL-PROJECTS/blob/main/_images/ERD%20Diagram.png)
